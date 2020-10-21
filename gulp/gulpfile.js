@@ -35,7 +35,7 @@ gulp.task("js", function (done) {
 
 gulp.task("html", function () {
   return gulp
-    .src("./src/app/**/*.html")
+    .src("../src/app/**/*.html")
     .pipe(gulp.dest("../dist/"))
     .pipe(
       browserSync.reload({
@@ -63,8 +63,8 @@ gulp.task("browser-sync", function (done) {
 
 gulp.task("start", gulp.series("build", "browser-sync"), function (done) {
   devMode = true;
-  gulp.watch(["./src/styles/**/*.css"], ["css"]);
-  gulp.watch(["./src/app/**/*.js"], ["js"]);
-  gulp.watch(["./src/app/**/*.html"], ["html"]);
+  gulp.watch(["../src/styles/**/*.css"], ["css"]);
+  gulp.watch(["../src/app/**/*.js"], ["js"]);
+  gulp.watch(["../src/app/**/*.html"], ["html"]);
   done();
 });
