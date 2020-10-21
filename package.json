@@ -1,0 +1,30 @@
+{
+  "name": "angularjs-gameoflife",
+  "version": "1.0.0",
+  "description": "game of life created with AngularJS ",
+  "main": "index.html",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/consuelo-sanna/AngularJS-gameOfLife.git"
+  },
+  "keywords": [
+    "AngularJS",
+    "NodeJS",
+    "gulp",
+    "npm"
+  ],
+  "author": "Consuelo Sanna",
+  "license": "ISC",
+  "dependencies": {
+    "angular": "^1.8.1",
+    "angular-route": "^1.8.1"
+  },
+  "devDependencies": {
+    "browser-sync": "^2.26.13",
+    "gulp": "^4.0.2",
+    "gulp-concat": "^2.6.1"
+  }
+}
