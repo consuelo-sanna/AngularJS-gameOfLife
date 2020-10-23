@@ -36,7 +36,7 @@ function js() {
 function css() {
   return src(styles) /** src of the file for the task */
     .pipe(concat("main.css")) /** output file of the concatened files */
-    .pipe(dest("../dist/css")) /** destination folder */
+    .pipe(dest("../dist/css/")) /** destination folder */
     .pipe(browsersync.stream()); /** keep watching and reload the browser */
 }
 
@@ -52,7 +52,8 @@ function html() {
 
 function watchFiles() {
   watch("../src/styles/**/*.css", css);
-  watch("./src/app/**/*.js", js);
+  watch("../src/app/**/*.css", css);
+  watch("../src/app/**/*.js", js);
   watch("../src/app/**/*.html", html);
 }
 

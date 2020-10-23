@@ -1,7 +1,6 @@
 angular.module("helloWorldApp").controller("HomeCtrl", [
   "$scope",
   function ($scope) {
-    console.log("Loaded.");
-    $scope.message = "Hello World Test";
+    $scope.message = "I am a message from the home controller";
   },
 ]);
