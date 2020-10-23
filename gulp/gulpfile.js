@@ -1,70 +1,73 @@
-const gulp = require("gulp");
+/** cmd gulp to create dist folder and for gulpfile change;
+ *  cmd gulp start to start the browser
+ */
+
+const { src, dest, parallel, series, watch } = require("gulp");
+
+// Load plugins
+
 const concat = require("gulp-concat");
-const browserSync = require("browser-sync").create();
+const clean = require("gulp-clean");
+const uglify = require("gulp-uglify");
+const browsersync = require("browser-sync").create();
 
 const scripts = require("../scripts");
 const styles = require("../styles");
 
-var devMode = false;
+// Clean dist
 
-gulp.task("css", function (done) {
-  gulp
-    .src(styles) /** src of the file for the task */
-    .pipe(concat("main.css")) /** output file of the concatened files */
-    .pipe(gulp.dest("../dist/css")) /** destination folder */
-    .pipe(
-      browserSync.reload({
-        stream: true,
-      })
-    );
-  done();
-});
+function clear() {
+  return src("./dist/*", {
+    read: false,
+  }).pipe(clean());
+}
 
-gulp.task("js", function (done) {
-  gulp
-    .src(scripts)
+// JS function
+
+function js() {
+  return src(scripts)
     .pipe(concat("scripts.js"))
-    .pipe(gulp.dest("../dist/js"))
-    .pipe(
-      browserSync.reload({
-        stream: true,
-      })
-    );
-  done();
-});
+    .pipe(uglify())
+    .pipe(dest("../dist/js/"))
+    .pipe(browsersync.stream());
+}
 
-gulp.task("html", function () {
-  return gulp
-    .src("../src/app/**/*.html")
-    .pipe(gulp.dest("../dist/"))
-    .pipe(
-      browserSync.reload({
-        stream: true,
-      })
-    );
-});
+// CSS function
+function css() {
+  return src(styles) /** src of the file for the task */
+    .pipe(concat("main.css")) /** output file of the concatened files */
+    .pipe(dest("../dist/css")) /** destination folder */
+    .pipe(browsersync.stream()); /** keep watching and reload the browser */
+}
 
-gulp.task(
-  "build",
-  gulp.series(gulp.parallel("css", "js", "html"), function (done) {
-    done();
-  })
-);
+// html
 
-gulp.task("browser-sync", function (done) {
-  browserSync.init(null, {
-    open: false,
+function html() {
+  return src("../src/app/**/*.html")
+    .pipe(dest("../dist/"))
+    .pipe(browsersync.stream());
+}
+
+// Watch files
+
+function watchFiles() {
+  watch("../src/styles/**/*.css", css);
+  watch("./src/app/**/*.js", js);
+  watch("../src/app/**/*.html", html);
+}
+
+// BrowserSync
+
+function browserSync() {
+  browsersync.init({
     server: {
-      baseDir: "dist",
+      baseDir: "../dist",
     },
+    port: 3000,
   });
-  done();
-});
+}
 
-gulp.task("start", gulp.series("build", "browser-sync"), function (done) {
-  devMode = true;
-  gulp.watch(["../src/styles/**/*.css"], ["css"]);
-  gulp.watch(["../src/app/**/*.js"], ["js"]);
-  gulp.watch(["../src/app/**/*.html"], ["html"]);
-  done();
-});
+// Tasks to define the execution of the functions simultaneously or in series
+
+exports.start = parallel(watchFiles, browserSync);
+exports.default = series(clear, parallel(js, css, html));
